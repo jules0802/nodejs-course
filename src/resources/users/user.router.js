@@ -24,10 +24,8 @@ router.route('/:id').delete(async (req, res) => {
 });
 
 router.route('/:id').put(async (req, res) => {
-  const user = await usersService.update(
-    req.params.id,
-    User.fromRequest(req.body)
-  );
+  const newUser = new User({ ...req.body, id: req.params.id });
+  const user = await usersService.update(req.params.id, newUser);
   res.status(200).send(User.toResponse(user));
 });
 

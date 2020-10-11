@@ -47,10 +47,10 @@ const createItem = (tableName, item) => {
   return getItem(tableName, item.id);
 };
 
-const updateItem = async (tableName, id, item) => {
+const updateItem = (tableName, id, item) => {
   const oldItem = getItem(tableName, id);
   if (oldItem) {
-    db[tableName][db[tableName].indexOf(oldItem)] = { ...item };
+    db[tableName].splice(db[tableName].indexOf(oldItem), 1, { ...item });
   }
   return getItem(tableName, id);
 };
