@@ -14,7 +14,9 @@ const db = {
     db.Users.push(new User());
   }
   const board = new Board();
-  db.Boards.push(board);
+  db.Boards.push(new Board());
+  db.Boards.push(new Board());
+  db.Boards.push(new Board());
 
   db.Tasks.push(
     new Task({ boardId: board.id }),
