@@ -35,13 +35,20 @@ const getItem = (tableName, id) => {
     console.error(`Something went wrong in ${tableName} ID ${id}`);
     throw new Error('Something went wrong');
   }
+
+  if (!items[0]) throw new Error('Not Found');
+
   return items[0];
 };
 
 const removeItem = (tableName, id) => {
   const itemToRemove = getItem(tableName, id);
-  db[tableName].splice(db[tableName].indexOf(itemToRemove), 1);
-  return itemToRemove;
+  if (!itemToRemove) {
+    throw new Error(`Cannot find item with id ${id} in ${tableName}`);
+  } else {
+    db[tableName].splice(db[tableName].indexOf(itemToRemove), 1);
+  }
+  return getAllItems(tableName);
 };
 
 const createItem = (tableName, item) => {

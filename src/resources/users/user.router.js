@@ -9,8 +9,12 @@ router.route('/').get(async (req, res) => {
 });
 
 router.route('/:id').get(async (req, res) => {
-  const user = await usersService.get(req.params.id);
-  res.status(200).send(User.toResponse(user));
+  try {
+    const user = await usersService.get(req.params.id);
+    res.status(200).send(User.toResponse(user));
+  } catch (err) {
+    res.status(404).send('Not found');
+  }
 });
 
 router.route('/').post(async (req, res) => {
@@ -19,14 +23,22 @@ router.route('/').post(async (req, res) => {
 });
 
 router.route('/:id').delete(async (req, res) => {
-  await usersService.remove(req.params.id);
-  res.sendStatus(200);
+  try {
+    await usersService.remove(req.params.id);
+    res.sendStatus(200);
+  } catch (err) {
+    res.status(404).send('Not found');
+  }
 });
 
 router.route('/:id').put(async (req, res) => {
-  const newUser = new User({ ...req.body, id: req.params.id });
-  const user = await usersService.update(req.params.id, newUser);
-  res.status(200).send(User.toResponse(user));
+  try {
+    const newUser = new User({ ...req.body, id: req.params.id });
+    const user = await usersService.update(req.params.id, newUser);
+    res.status(200).send(User.toResponse(user));
+  } catch (err) {
+    res.status(404).send('Not found');
+  }
 });
 
 module.exports = router;
