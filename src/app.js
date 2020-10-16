@@ -5,7 +5,6 @@ const YAML = require('yamljs');
 const userRouter = require('./resources/users/user.router');
 const boardRouter = require('./resources/boards/board.router');
 const taskRouter = require('./resources/tasks/task.router');
-// const { finished } = require('stream');
 const { INTERNAL_SERVER_ERROR, getStatusText } = require('http-status-codes');
 const logging = require('./utils/logging');
 const app = express();
@@ -19,6 +18,8 @@ process.on('uncaughtException', err => {
 
 process.on('unhandledRejection', reason => {
   console.error(`Unhandled rejection detected: ${reason.message}`);
+  // eslint-disable-next-line no-process-exit
+  process.exit(1);
 });
 
 app.use(express.json());
