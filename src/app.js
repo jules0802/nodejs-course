@@ -46,8 +46,4 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-// for crosscheck
-// Promise.reject(Error('Oops!'));
-// throw Error('Oops!');
-
 module.exports = app;
