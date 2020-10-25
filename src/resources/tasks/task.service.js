@@ -1,4 +1,4 @@
-const taskRepo = require('./task.memory.repository');
+const taskRepo = require('./task.db.repository');
 
 const getAll = async boardId => await taskRepo.getAll(boardId);
 
