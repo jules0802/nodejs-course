@@ -13,6 +13,8 @@ const create = async user => {
 };
 
 const remove = async id => {
+  const taskService = require('../tasks/task.service');
+  await taskService.unassignUser(id);
   return (await User.deleteOne({ _id: id })).deletedCount;
 };
 

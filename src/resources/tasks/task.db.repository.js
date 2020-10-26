@@ -5,7 +5,11 @@ const getAll = async boardId => {
 };
 
 const get = async (boardId, id) => {
-  return Task.findOne({ boardId, _id: id });
+  const task = await Task.findOne({ boardId, _id: id });
+  if (!task) {
+    throw new Error();
+  }
+  return task;
 };
 
 const remove = async (boardId, id) => {
@@ -17,7 +21,7 @@ const create = async task => {
 };
 
 const update = async task => {
-  return Task.findOneAndUpdate({ boardId: task.boardId, _id: task.id }, task);
+  return Task.findOneAndUpdate({ boardId: task.boardId, _id: task._id }, task);
 };
 
 const removeByBoardId = async boardId => {
@@ -31,20 +35,10 @@ const removeByBoardId = async boardId => {
 };
 
 const unassignUser = async userId => {
-  const boardsService = require('../boards/board.service');
-  const boards = await boardsService.getAll();
-  if (boards.length > 0) {
-    boards.forEach(async board => {
-      const tasksInBoard = await getAll(board.id);
-      if (tasksInBoard.length > 0) {
-        tasksInBoard.forEach(async task => {
-          if (task.userId === userId) {
-            await update({ ...task, userId: null });
-          }
-        });
-      }
-    });
-  }
+  const allTasks = await Task.find({ userId });
+  allTasks.forEach(async task => {
+    await Task.findByIdAndUpdate(task._id, { userId: null });
+  });
 };
 
 module.exports = {

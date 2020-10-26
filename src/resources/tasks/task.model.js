@@ -9,7 +9,7 @@ const taskSchema = new mongoose.Schema(
     },
     order: Number,
     description: String,
-    userId: String,
+    userId: String || null,
     boardId: String || undefined,
     columnId: String,
     _id: {
@@ -19,6 +19,11 @@ const taskSchema = new mongoose.Schema(
   },
   { versionKey: false }
 );
+
+taskSchema.statics.toResponse = task => {
+  const { id, title, order, description, userId, boardId, columnId } = task;
+  return { id, title, order, description, userId, boardId, columnId };
+};
 
 const Task = mongoose.model('Task', taskSchema);
 

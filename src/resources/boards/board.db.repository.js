@@ -17,6 +17,8 @@ const create = async board => {
 };
 
 const remove = async id => {
+  const taskService = require('../tasks/task.service');
+  await taskService.removeByBoard(id);
   return (await Board.deleteOne({ _id: id })).deletedCount;
 };
 

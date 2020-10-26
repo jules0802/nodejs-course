@@ -25,11 +25,11 @@ logger.stream = {
 };
 
 module.exports = (req, res, next) => {
-  // const { url, query, body } = req;
-  /* logger.log(
+  const { url, query, body } = req;
+  logger.log(
     'info',
     `${url} ${JSON.stringify(query)} "body": ${JSON.stringify(body)}`
-  );*/
+  );
 
   next();
 };
