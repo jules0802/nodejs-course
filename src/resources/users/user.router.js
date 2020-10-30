@@ -1,6 +1,8 @@
 const router = require('express').Router();
+const bcrypt = require('bcrypt');
 const User = require('./user.model');
 const usersService = require('./user.service');
+const saltRounds = 10;
 
 router.route('/').get(async (req, res) => {
   const users = await usersService.getAll();
@@ -18,8 +20,13 @@ router.route('/:id').get(async (req, res) => {
 });
 
 router.route('/').post(async (req, res) => {
-  const user = await usersService.create(new User({ ...req.body }));
-  res.status(200).send(User.toResponse(user));
+  bcrypt.hash(req.body.password, saltRounds, async (err, hash) => {
+    if (err) throw err;
+    const user = await usersService.create(
+      new User({ ...req.body, password: hash })
+    );
+    res.status(200).send(User.toResponse(user));
+  });
 });
 
 router.route('/:id').delete(async (req, res) => {
