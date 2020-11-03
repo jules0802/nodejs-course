@@ -5,10 +5,12 @@ const YAML = require('yamljs');
 const userRouter = require('./resources/users/user.router');
 const boardRouter = require('./resources/boards/board.router');
 const taskRouter = require('./resources/tasks/task.router');
+const loginRouter = require('./resources/users/login.router');
 const { INTERNAL_SERVER_ERROR, getStatusText } = require('http-status-codes');
-const logging = require('./utils/logging');
+// const logging = require('./utils/logging');
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
+const checkAuthMiddleware = require('./utils/checkAuthMiddleware');
 
 process.on('uncaughtException', err => {
   console.error(`captured error: ${err.message}`);
@@ -26,7 +28,7 @@ app.use(express.json());
 
 app.use('/doc', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
-app.use('*', logging);
+// app.use('*', logging);
 
 app.use('/', (req, res, next) => {
   if (req.originalUrl === '/') {
@@ -36,9 +38,10 @@ app.use('/', (req, res, next) => {
   next();
 });
 
-app.use('/users', userRouter);
-app.use('/boards', boardRouter);
-boardRouter.use('/:boardId/tasks', taskRouter);
+app.use('/login', loginRouter);
+app.use('/users', checkAuthMiddleware, userRouter);
+app.use('/boards', checkAuthMiddleware, boardRouter);
+boardRouter.use('/:boardId/tasks', checkAuthMiddleware, taskRouter);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
